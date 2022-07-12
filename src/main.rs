@@ -1,42 +1,57 @@
 use std::fmt;
 use std::mem;
-
 use reqwest::Client;
+mod gg;
+mod results;
+mod pdf;
 
-// #[derive(Debug)]
-// struct Person<'a> {
-//     name: &'a str,
-//     age: u8,
-// }
+#[derive(Debug)]
+struct MinMax(i64, i64);
+#[derive(Debug)]
+struct Complex {
+    real: f64,
+    imag: f64,
+}
+
+struct List(Vec<i32>);
+
+#[derive(Debug)]
+struct Color {
+    red: u8,
+    green: u8,
+    blue: u8,
+}
+
+#[derive(Debug)]
+struct City {
+    name: &'static str,
+    lat: f32,
+    lon: f32,
+}
 
 #[derive(Debug)]
 struct Structure(i32);
+
+struct Matrix(f32, f32, f32, f32);
+
 impl fmt::Display for Structure {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.0)
     }
 }
 
-#[derive(Debug)]
-struct MinMax(i64, i64);
 impl fmt::Display for MinMax {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "({},{})", self.0, self.1)
     }
 }
 
-#[derive(Debug)]
-struct Complex {
-    real: f64,
-    imag: f64,
-}
+
 impl fmt::Display for Complex {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}+{}i", self.real, self.imag)
     }
 }
-
-struct List(Vec<i32>);
 
 impl fmt::Display for List {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -55,12 +70,6 @@ impl fmt::Display for List {
     }
 }
 
-#[derive(Debug)]
-struct City {
-    name: &'static str,
-    lat: f32,
-    lon: f32,
-}
 impl fmt::Display for City {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let lat_c: char = if self.lat >= 0.0 { 'N' } else { 'S' };
@@ -77,12 +86,6 @@ impl fmt::Display for City {
     }
 }
 
-#[derive(Debug)]
-struct Color {
-    red: u8,
-    green: u8,
-    blue: u8,
-}
 
 impl fmt::Display for Color {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -93,8 +96,6 @@ impl fmt::Display for Color {
         )
     }
 }
-
-struct Matrix(f32, f32, f32, f32);
 
 impl fmt::Display for Matrix {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -112,9 +113,6 @@ fn reverse(pair: (i32, bool)) -> (bool, i32) {
 
     (boolean, integer)
 }
-
-mod gg;
-mod results;
 
 #[allow(dead_code)]
 fn printing() {
@@ -276,7 +274,8 @@ fn intro() {
 }
 
 #[tokio::main]
-async fn main() {
+#[allow(dead_code)]
+async fn file_download() {
     results::download_file(
         &Client::new(),
         "https://mega.nz/file/JFgBmCiJ#-B6zCMG0KIdwJA-nl913w4NI9w2utqh2DIUheC8Vys0",
@@ -286,4 +285,8 @@ async fn main() {
     .unwrap_or_else(|e| {
         println!("Error: {}", e);
     });
+}
+
+fn main(){
+    println!("{:?}", pdf::get_text("test.pdf"));
 }
