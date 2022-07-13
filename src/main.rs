@@ -288,5 +288,9 @@ async fn file_download() {
 }
 
 fn main(){
-    println!("{:?}", pdf::get_text("test.pdf"));
+    let data = pdf::get_text("test.pdf").unwrap_or_else(|e| {
+        println!("Error: {}", e);
+        "".to_string()
+    });
+    println!("{}", data);
 }
